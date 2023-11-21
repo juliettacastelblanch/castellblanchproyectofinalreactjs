@@ -1,0 +1,43 @@
+
+.container {
+    margin: 20px;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+
+label {
+    margin-bottom: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+}
+
+
+button {
+    background-color:#BF09BE;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color:#BF09BE;
+}
+
+
+.progress {
+    margin-top: 20px;
+}
+
