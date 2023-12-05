@@ -17,9 +17,9 @@ const ItemDetail = ({ product }) => {
         alt="Product"
       ></img>
       <p>Titulo: {product.product.title}</p>
-      <p>Descripción: {product.product.description}</p>
-      <ItemCount onAdd={addToCart} />
-      <button onClick={() => console.log(cart)}>Ver Carrito</button>
+      
+   
+   
     </div>
   );
 };

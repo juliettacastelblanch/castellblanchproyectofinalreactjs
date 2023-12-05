@@ -1,17 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
+import ItemDetail from "../ItemDetail/ItemDetail";
 import { StoreContext } from "../../Context/StoreContext";
 
 const Cart = () => {
   const [show, setShow] = useState(false);
-  const { cart, setCart } = useContext(StoreContext);
+  const { cart, addToCart } = useContext(StoreContext); // Asumiendo que hay una función addToCart en el contexto
   const [subTotal, setSubTotal] = useState(0);
-
-  useEffect(() => {
-    calculateSubTotal();
-  }, [cart]);
 
   const calculateSubTotal = () => {
     let calculatedSubTotal = 0;
@@ -32,10 +29,9 @@ const Cart = () => {
     setShow(false);
   };
 
-  const handleEmptyCart = () => {
-    setCart([]);
+  const handleAddToCart = (product) => {
+    addToCart(product);
     calculateSubTotal();
-    handleClose();
   };
 
   return (
@@ -44,15 +40,15 @@ const Cart = () => {
         Ver carrito
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} dialogClassName="cart-modal">
         <Modal.Header closeButton>
           <Modal.Title>Mi Carrito</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {cart.length === 0 ? (
-            <div>
-              <h3>Tu carrito está vacío</h3>
-              <Link to="/" onClick={handleClose}>
+            <div className="cart__empty">
+              <h3 className="empty">Tu carrito está vacío</h3>
+              <Link to="/" className="cart__go" onClick={handleClose}>
                 Ir al tienda
               </Link>
             </div>
@@ -60,12 +56,7 @@ const Cart = () => {
             <>
               <div>
                 {cart.map((product) => (
-                  <div key={product.product.id}>
-                    <p>
-                      {product.product.name} - Cantidad: {product.quantity}
-                    </p>
-                   
-                  </div>
+                  <ItemDetail product={product} key={product.id} />
                 ))}
               </div>
 
@@ -82,12 +73,6 @@ const Cart = () => {
               <Link to="/checkout" onClick={handleClose}>
                 COMPRAR
               </Link>
-
-              <div>
-                <Button variant="danger" onClick={handleEmptyCart}>
-                  Vaciar Carrito
-                </Button>
-              </div>
             </>
           )}
         </Modal.Body>
