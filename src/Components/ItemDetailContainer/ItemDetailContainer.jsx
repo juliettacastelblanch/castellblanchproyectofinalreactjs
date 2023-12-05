@@ -1,4 +1,3 @@
-// src/components/ItemDetailContainer.js
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ItemDetail from "../ItemDetail/ItemDetail";
@@ -11,8 +10,8 @@ const ItemDetailContainer = () => {
   const { loading, setLoading } = useState(true);
 
   useEffect(() => {
-    const productsRef = doc(db, "products", id);
-  getDoc(productsRef)
+    const productsRef = document(db, "products", id);
+    getDoc(productsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
           setProducto({
@@ -24,7 +23,7 @@ const ItemDetailContainer = () => {
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
   }, [id]);
- return (
+  return (
     <>
       {loading ? (
         <loader loading={loading} />
@@ -36,8 +35,3 @@ const ItemDetailContainer = () => {
 };
 
 export default ItemDetailContainer;
-
-
-
-
-

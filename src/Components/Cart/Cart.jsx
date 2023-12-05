@@ -1,20 +1,19 @@
-import { useContext, useState, useRef, useEffect } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import { MdOutlineClose } from "react-icons/md";
+import Modal from "react-bootstrap/Modal";
 import { Link } from "react-router-dom";
-import ItemDetail from "../ItemDetail/ItemDetail";
 import { StoreContext } from "../../Context/StoreContext";
-import { Overlay } from "react-bootstrap";
-
 
 const Cart = () => {
   const [show, setShow] = useState(false);
-  const target = useRef(null);
-  const { cart } = useContext(StoreContext);
+  const { cart, setCart } = useContext(StoreContext);
   const [subTotal, setSubTotal] = useState(0);
-  
+
   useEffect(() => {
+    calculateSubTotal();
+  }, [cart]);
+
+  const calculateSubTotal = () => {
     let calculatedSubTotal = 0;
 
     cart.forEach((product) => {
@@ -22,77 +21,82 @@ const Cart = () => {
     });
 
     setSubTotal(calculatedSubTotal);
-  }, [cart]);
+  };
+
+  const handleShow = () => {
+    calculateSubTotal();
+    setShow(true);
+  };
 
   const handleClose = () => {
-    console.log(cart);
     setShow(false);
+  };
+
+  const handleEmptyCart = () => {
+    setCart([]);
+    calculateSubTotal();
+    handleClose();
   };
 
   return (
     <div>
-      <Button variant="primary" ref={target} onClick={() => setShow(!show)}>
+      <Button variant="primary" onClick={handleShow}>
         Ver carrito
       </Button>
-      <Overlay target={target.current} show={show} placement="bottom">
-        {({
-          placement: _placement,
-          arrowProps: _arrowProps,
-          show: _show,
-          popper: _popper,
-          hasDoneInitialMeasure: _hasDoneInitialMeasure,
-          ...props
-        }) => (
-          <div
-            {...props}
-            style={{
-              position: "absolute",
-              backgroundColor: "#BF09BE",
-              padding: "2px 10px",
-              color: "white",
-              borderRadius: 3,
-              ...props.style,
-            }}
-          >
-            <MdOutlineClose onClick={handleClose} className="cart__close" />
-            {cart.length === 0 ? (
-              <div className="cart__empty">
-                <h3 className="empty">Tu carrito esta vacio</h3>
-                <Link to="/" className="cart__go" onClick={handleClose}>
-                  Ir al tienda
-                </Link>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Mi Carrito</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {cart.length === 0 ? (
+            <div>
+              <h3>Tu carrito está vacío</h3>
+              <Link to="/" onClick={handleClose}>
+                Ir al tienda
+              </Link>
+            </div>
+          ) : (
+            <>
+              <div>
+                {cart.map((product) => (
+                  <div key={product.product.id}>
+                    <p>
+                      {product.product.name} - Cantidad: {product.quantity}
+                    </p>
+                   
+                  </div>
+                ))}
               </div>
-            ) : (
-              <div className="cart__content">
-                <h3 className="cart__title">Mi carrito</h3>
 
-                <div className="cart__items">
-                  {cart.map((product) => (
-                    <ItemDetail product={product} key={product.id} />
-                  ))}
-                </div>
-
-                <div className="flex-row cart__subtotal">
-                  <h4>Subtotal</h4>
-                  <span>${subTotal}</span>
-                </div>
-
-                <div className="flex-row cart__total">
-                  <h4>Total</h4>
-                  <span>${subTotal}</span>
-                </div>
-                <Link
-                  to="/checkout"
-                  className="cart__cta"
-                  onClick={handleClose}
-                >
-                  COMPRAR
-                </Link>
+              <div>
+                <h4>Subtotal</h4>
+                <span>${subTotal}</span>
               </div>
-            )}
-          </div>
-        )}
-      </Overlay>
+
+              <div>
+                <h4>Total</h4>
+                <span>${subTotal}</span>
+              </div>
+
+              <Link to="/checkout" onClick={handleClose}>
+                COMPRAR
+              </Link>
+
+              <div>
+                <Button variant="danger" onClick={handleEmptyCart}>
+                  Vaciar Carrito
+                </Button>
+              </div>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-// import CartWidget from "../CartWidget/CartWidget";
 import Cart from "../Cart/Cart";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import CartWidget from "../CartWidget/CartWidget";
 
 
 const NavbarComponent = () => {
@@ -40,7 +40,7 @@ const NavbarComponent = () => {
                 <Link to="/category/Remeras">Remeras</Link>
               </NavDropdown.Item>
             </NavDropdown>
-          </Nav>
+            </Nav>
         </Navbar.Collapse>
         <Cart />
       </Container>
